@@ -130,8 +130,12 @@ module Capistrano
 
 	      # finally load the derived instances into the serverlist used by capistrano tasks
 	      account_instance_list.each do |instance|
+	      	if instance[:vpc_id]
+	      	  # if this instance is associated with a VPC then we use the private address
+	      	  hostname = instance[:private_ip_address] 
+	      	else
 		      hostname = instance[:dns_name] 
-		      hostname = instance[:ip_address] if hostname.empty?   # if host in a VPC, there will be no DNS name, use ip_address instead
+		    end
 		      server(hostname, *args)
 	      end
       end
